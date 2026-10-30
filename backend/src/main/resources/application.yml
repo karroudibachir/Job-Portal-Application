@@ -1,0 +1,35 @@
+spring:
+  application: { name: job-portal }
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/jobportal?createDatabaseIfNotExist=true}
+    username: ${DB_USER:jobportal}
+    password: ${DB_PASSWORD:jobportal}
+  jpa:
+    hibernate: { ddl-auto: validate }
+    open-in-view: false
+  flyway: { enabled: true }
+  servlet: { multipart: { max-file-size: 5MB, max-request-size: 6MB } }
+server:
+  port: ${PORT:8080}
+  error: { include-message: never }
+management:
+  endpoints.web.exposure.include: health,info
+  endpoint.health.show-details: never
+app:
+  jwt-secret: ${JWT_SECRET}
+  jwt-ttl: ${JWT_TTL:3600}
+  cors-origins: ${CORS_ORIGINS:http://localhost:4200,http://localhost}
+  upload-dir: ${UPLOAD_DIR:./uploads}
+springdoc.swagger-ui.path: /swagger-ui.html
+---
+spring:
+  config.activate.on-profile: test
+  datasource:
+    url: jdbc:h2:mem:jobportal;MODE=MySQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa.hibernate.ddl-auto: validate
+  flyway.enabled: true
+app.jwt-secret: test-profile-only-signing-key-32-bytes-minimum
+app.jwt-ttl: 3600

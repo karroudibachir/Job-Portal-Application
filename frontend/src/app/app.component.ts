@@ -1,0 +1,5 @@
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { AuthService } from './core/auth';
+@Component({selector:'app-root',standalone:true,imports:[RouterLink,RouterOutlet],template:`<header class="nav"><a class="brand" routerLink="/"><span class="brand-mark">w.</span> workboard</a><nav><a routerLink="/jobs">Find a role</a>@if(auth.isAuthenticated()){<a [routerLink]="auth.dashboardPath()">My dashboard</a><button class="nav-button" (click)="signOut()">Sign out</button>}@else{<a routerLink="/login">Sign in</a><a class="btn dark small" style="color: white;" routerLink="/register">Get started</a>}</nav></header><router-outlet/><footer><div class="wrap footer-inner"><a class="brand" routerLink="/"><span class="brand-mark">w.</span> workboard</a><span>Good work begins with a good fit.</span><span>© 2026 Workboard</span></div></footer>`})
+export class AppComponent {auth=inject(AuthService);private router=inject(Router);signOut(){this.auth.logout();void this.router.navigateByUrl('/')}}

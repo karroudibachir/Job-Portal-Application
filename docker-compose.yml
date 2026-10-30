@@ -1,0 +1,36 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-jobportal}
+      MYSQL_USER: ${DB_USER:-jobportal}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-jobportal}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root-local-only}
+    volumes: [mysql_data:/var/lib/mysql]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-root-local-only}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  backend:
+    build: ./backend
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/${DB_NAME:-jobportal}
+      DB_USER: ${DB_USER:-jobportal}
+      DB_PASSWORD: ${DB_PASSWORD:-jobportal}
+      UPLOAD_DIR: /app/uploads
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env before starting}
+      JWT_TTL: ${JWT_TTL:-3600}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:4200,http://localhost}
+    volumes: [uploads:/app/uploads]
+    depends_on:
+      mysql: { condition: service_healthy }
+  frontend:
+    build: ./frontend
+    ports: ["80:80"]
+    depends_on: [backend]
+volumes:
+  mysql_data:
+  uploads:
