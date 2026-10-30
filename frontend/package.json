@@ -5,7 +5,7 @@
   "scripts": {
     "start": "ng serve --host 0.0.0.0",
     "build": "ng build",
-    "test": "ng test --watch=false --browsers=ChromeHeadless"
+    "test": "ng test"
   },
   "dependencies": {
     "@angular/common": "20.3.34",
