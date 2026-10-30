@@ -1,7 +1,16 @@
-import { TestBed } from '@angular/core/testing';
+import { getTestBed, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
+import {
+  BrowserTestingModule,
+  platformBrowserTesting,
+} from '@angular/platform-browser/testing';
 import { AuthService } from './auth';
+
+getTestBed().initTestEnvironment(
+  BrowserTestingModule,
+  platformBrowserTesting(),
+);
 
 describe('AuthService', () => {
   beforeEach(() => { localStorage.clear(); TestBed.configureTestingModule({providers:[provideHttpClient(),provideRouter([])]}); });
